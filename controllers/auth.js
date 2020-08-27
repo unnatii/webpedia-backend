@@ -1,15 +1,15 @@
 const User =require('../models/user')
+const Session =require('../models/session')
 const bcrypt=require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const sessionizeUser=require('../util/helper')
 
 exports.signup = (req, res, next) => {
-  // console.log(req.body);
-   const { email,name, password } = req.body;
+   const { name,email, password } = req.body.user;
    User.findOne({
      where: { email: email },
    }).then(userInfo=>{
-     //console.log("ui",userInfo);
+     console.log("ui",userInfo);
      if(userInfo){
        console.log("email already registered!")
        return res.send("emailError")
@@ -43,8 +43,9 @@ exports.signup = (req, res, next) => {
 
 
 exports.signin = async (req, res) => {
+console.log(req.body);
   try {
-    const { email, password } = req.body  
+    const { email, password } = req.body.user  
     const user = await User.findOne({
       where: { email: email },
     });
@@ -53,6 +54,7 @@ exports.signin = async (req, res) => {
       if(result){
         const sessionUser = sessionizeUser(user);
         req.session.user = sessionUser
+        console.log(req.session);
         res.send(sessionUser);
       }else{
         res.status(200).json({
@@ -76,6 +78,11 @@ exports.signin = async (req, res) => {
     try {
         const user = session.user;
         if (user) {
+         Session.destroy({
+           where:{
+             email:user.email
+           }
+         })
           session.destroy(err => {
             if (err) throw (err);
             res.clearCookie(SESS_NAME);

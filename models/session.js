@@ -10,16 +10,22 @@ const Session=sequelize.define("Session", {
     },
     expires: Sequelize.DATE,
     data: Sequelize.TEXT,
+    userId: Sequelize.STRING,
   });
   
- 
+  function extendDefaultFields(defaults, session) {
+    return {
+      data: defaults.data,
+      expires: defaults.expires,
+      userId: session.user.userId,
+    };
+  }
 
-User.hasOne(Session);
-Session.belongsTo(User);
 
 const sequelizeSessionStore = new SessionStore({
     db: sequelize,
     table: "Session",
+      extendDefaultFields: extendDefaultFields,
   });
 
   module.exports=sequelizeSessionStore;

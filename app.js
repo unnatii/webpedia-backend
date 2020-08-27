@@ -1,30 +1,45 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const expressSession=require('express-session');
-const sequelize=require('./util/database')
-const equelizeSessionStore=require('./models/session')
-const authRoutes=require('./routes/authRoutes')
-const {PORT,SESS_NAME, SESS_SECRET, SESS_LIFETIME,NODE_ENV}=require('./config')
+const cors = require("cors");
+const expressSession = require("express-session");
+const sequelize = require("./util/database");
+const sequelizeSessionStore = require("./models/session");
+const authRoutes = require("./routes/authRoutes");
 const bodyParser = require("body-parser");
+const {
+  PORT,
+  SESS_NAME,
+  SESS_SECRET,
+  SESS_LIFETIME,
+  NODE_ENV,
+} = require("./config");
+
+
 app.use(bodyParser.json());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+    exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"],
+  })
+);
 
+app.use(
+  expressSession({
+    name: SESS_NAME,
+    secret: SESS_SECRET,
+    saveUninitialized: false,
+    resave: false,
+    store: sequelizeSessionStore,
 
-app.use(expressSession({
-  name: SESS_NAME,
-  secret: SESS_SECRET,
-  saveUninitialized: false,
-  resave: false,
-  store: equelizeSessionStore,
-  
-  cookie: {
-    sameSite: true,
-    secure: NODE_ENV === 'production',
-    maxAge: parseInt(SESS_LIFETIME)
-  }
-}));
-app.use('/user', authRoutes);
-
-
+    cookie: {
+      sameSite: false,
+      secure: false,
+      maxAge: parseInt(SESS_LIFETIME),
+    },
+  })
+);
+app.use("/user", authRoutes);
 
 sequelize
   .sync()
@@ -37,5 +52,3 @@ sequelize
   .catch((err) => {
     console.log(err);
   });
-
-
