@@ -1,25 +1,11 @@
 # webpedia-backend
 
-#auth routes
-#http://localhost:5000/user/signup
-#http://localhost:5000/user/signin
-#http://localhost:5000/user/signout
+# auth routes
 
-#req object for signup
-{
-    "user":
-    {
-    "name":"name"
-    "email":"email",
-    "password":"password"
-     }
-}
+# http://localhost:5000/user/signup
 
-#req object for signin
-{
-    "user":
-    {
-    "email":"email",
-    "password":"password"
-     }
-}
+# http://localhost:5000/user/signin
+
+# http://localhost:5000/user/signout
+
+
