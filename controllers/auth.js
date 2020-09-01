@@ -3,9 +3,10 @@ const Session =require('../models/session')
 const bcrypt=require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 const sessionizeUser=require('../util/helper')
+const {SESS_NAME} = require("../config");
 
 exports.signup = (req, res, next) => {
-   const { name,email, password } = req.body.user;
+   const { name,email, password } = req.body;
    User.findOne({
      where: { email: email },
    }).then(userInfo=>{
@@ -43,9 +44,9 @@ exports.signup = (req, res, next) => {
 
 
 exports.signin = async (req, res) => {
-console.log(req.body);
+  
   try {
-    const { email, password } = req.body.user  
+    const { email, password } = req.body 
     const user = await User.findOne({
       where: { email: email },
     });
@@ -74,9 +75,11 @@ console.log(req.body);
   
   
   
-  exports.signout = ({session}, res, next) => {
+exports.signout = ({session}, res, next) => {
+  
     try {
-        const user = session.user;
+        const user = session;
+        console.log("signout",user);
         if (user) {
          Session.destroy({
            where:{
@@ -86,17 +89,17 @@ console.log(req.body);
           session.destroy(err => {
             if (err) throw (err);
             res.clearCookie(SESS_NAME);
-            res.send(user);
+            res.send("deleted");
           });
         } else {
           throw new Error('Something went wrong');
         }
       } catch (err) {
-        res.status(422).send(parseError(err));
+        res.status(422).send(err);
       }
  
   }
 
-  exports.isLoggedIn=({ session: { user }}, res)=>{
+exports.isLoggedIn=({ session: { user }}, res)=>{
     res.send({ user });
   }
