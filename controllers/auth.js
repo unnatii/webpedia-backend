@@ -55,7 +55,6 @@ exports.signin = async (req, res) => {
       if(result){
         const sessionUser = sessionizeUser(user);
         req.session.user = sessionUser
-        console.log(req.session);
         res.send(sessionUser);
       }else{
         res.status(200).json({
@@ -101,5 +100,6 @@ exports.signout = ({session}, res, next) => {
   }
 
 exports.isLoggedIn=({ session: { user }}, res)=>{
-    res.send({ user });
+  console.log("session",user)
+    res.send( user );
   }
