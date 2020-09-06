@@ -4,7 +4,12 @@ const expressSession = require("express-session");
 const sequelize = require("./util/database");
 const sequelizeSessionStore = require("./models/session");
 const authRoutes = require("./routes/authRoutes");
+const postRoutes=require("./routes/postRoutes")
 const bodyParser = require("body-parser");
+const Post=require('./models/post')
+const User=require('./models/user')
+const Bookmark=require('./models/bookmark')
+
 const {
   PORT,
   SESS_NAME,
@@ -31,6 +36,7 @@ app.use(
   })
 );
 app.use("/user", authRoutes);
+app.use("/post", postRoutes);
 
 sequelize
   .sync()

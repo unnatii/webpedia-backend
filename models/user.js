@@ -26,6 +26,9 @@ const User=sequelize.define('User',{
     date:
     { type: Sequelize.DATE,
      defaultValue: Sequelize.NOW 
+    },
+    score:
+    { type:Sequelize.INTEGER
     }
 
 });
