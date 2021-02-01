@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const cors = require("cors");
 const expressSession = require("express-session");
 const sequelize = require("./util/database");
 const sequelizeSessionStore = require("./models/session");
@@ -16,14 +15,6 @@ const {
 
 
 app.use(bodyParser.json());
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-    exposedHeaders: ["Content-Length", "X-Foo", "X-Bar"],
-  })
-);
-
 app.use(
   expressSession({
     name: SESS_NAME,
@@ -46,7 +37,7 @@ sequelize
   .then((result) => {
     console.log(result);
     app.listen(PORT, () =>
-      console.log(`Example app listening at http://localhost:5000`)
+      console.log(`app listening at http://localhost:${PORT}`)
     );
   })
   .catch((err) => {
